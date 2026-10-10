@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CF Counterexample Arena tests</title>
+  <link rel="stylesheet" href="../css/app.css" />
+  <style>
+    body { max-width: 860px; margin: 0 auto; padding: 24px; }
+    .fail { color: #ff6d7a; }
+    .ok { color: #c6f24a; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>CF Counterexample Arena tests</h1>
+  <p>This page loads the same bundled scripts as the game and runs the suite in the browser, including a Blob-backed worker timeout check.</p>
+  <pre id="out">Running…</pre>
+  <script src="../js/engine/runtime.js"></script>
+  <script src="../js/engine/scoring.js"></script>
+  <script src="../js/engine/store.js"></script>
+  <script src="../js/engine/daily.js"></script>
+  <script src="../js/engine/worker-host.js"></script>
+  <script src="../js/engine/highlight.js"></script>
+  <script src="../js/challenges/catalog.js"></script>
+  <script src="../js/challenges/easy.js"></script>
+  <script src="../js/challenges/medium.js"></script>
+  <script src="../js/challenges/hard.js"></script>
+  <script src="tests.js"></script>
+  <script>
+    (function () {
+      var out = document.getElementById("out");
+      var rows = CFArenaTests.run();
+      function line(ok, name, detail) {
+        return (ok ? "ok  - " : "FAIL- ") + name + (detail ? " :: " + detail : "");
+      }
+      var hung = {
+        id: "timeout-fixture",
+        buggySource: "function solve() { while (true) {} }",
+        referenceSource: "function solve() { return '0'; }",
+        parseSource: "function parse() { return {}; }",
+        validateSource: "function validate() { return { ok: true }; }",
+        sizeSource: "function sizeOf() { return 1; }",
+        timeLimitMs: 200,
+        maxInputChars: 20,
+        maxParsedSize: 10
+      };
+      CFArena.runJob(hung, "1", function (result) {
+        var timeoutOk = result.status === "buggy_timeout";
+        rows.push({
+          ok: timeoutOk,
+          name: "browser Blob worker timeout",
+          detail: timeoutOk ? "" : JSON.stringify(result)
+        });
+        var failed = rows.filter(function (r) { return !r.ok; });
+        out.textContent = rows.map(function (r) {
+          return line(r.ok, r.name, r.detail);
+        }).join("\n") + "\n\n" + (rows.length - failed.length) + " passed, " + failed.length + " failed";
+        out.className = failed.length ? "fail" : "ok";
+      });
+    })();
+  </script>
+</body>
+</html>

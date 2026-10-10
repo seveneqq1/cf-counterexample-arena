@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hack smoke</title>
+</head>
+<body>
+  <pre id="out">running</pre>
+  <script src="../js/engine/runtime.js"></script>
+  <script src="../js/engine/scoring.js"></script>
+  <script src="../js/engine/store.js"></script>
+  <script src="../js/engine/daily.js"></script>
+  <script src="../js/engine/worker-host.js"></script>
+  <script src="../js/engine/highlight.js"></script>
+  <script src="../js/challenges/catalog.js"></script>
+  <script src="../js/challenges/easy.js"></script>
+  <script src="../js/challenges/medium.js"></script>
+  <script src="../js/challenges/hard.js"></script>
+  <script>
+    (function () {
+      var out = document.getElementById("out");
+      var ch = CFArena.getChallenge("nondecreasing-prefix");
+      var payload = {
+        worker: CFArena.workerSupport(),
+        protocol: location.protocol,
+        status: null,
+        result: null
+      };
+      CFArena.runJob(ch, "2\n1 2", function (result) {
+        payload.status = result.status;
+        payload.result = result;
+        payload.score = CFArena.scoreBreakdown(ch, result.size, 0, false);
+        var store = CFArena.createStore();
+        if (result.status === "hack") {
+          store.recordHack(ch.id, "2\n1 2", result.size, payload.score);
+        }
+        var again = CFArena.createStore();
+        payload.persistedScore = again.totalScore();
+        payload.persistedSolved = again.getRecord(ch.id).independentlySolved;
+        out.textContent = JSON.stringify(payload, null, 2);
+        document.title = "smoke:" + result.status;
+      });
+    })();
+  </script>
+</body>
+</html>
