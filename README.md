@@ -10,6 +10,44 @@ The first version’s solutions are **JavaScript**. They are not C++ and they ar
 
 This is a client-side app. Bug write-ups, reference solvers, and known counterexamples live in the downloaded files. The UI hides them until you hack or surrender; developer tools can still open the sources.
 
+## Launch
+
+Nothing to install. After you have the project folder (clone or unzip), open `index.html` in a browser.
+
+**Any OS:** in Finder, File Explorer, or your file manager, double-click `index.html`.
+
+**macOS (Terminal)**
+
+```bash
+git clone https://github.com/seveneqq1/cf-counterexample-arena.git
+cd cf-counterexample-arena
+open index.html
+```
+
+`open -a "Google Chrome" index.html` or `open -a Safari index.html` picks a specific browser.
+
+**Windows (Command Prompt or PowerShell)**
+
+```bat
+git clone https://github.com/seveneqq1/cf-counterexample-arena.git
+cd cf-counterexample-arena
+start index.html
+```
+
+PowerShell can also use `Invoke-Item index.html`.
+
+**Linux (terminal)**
+
+```bash
+git clone https://github.com/seveneqq1/cf-counterexample-arena.git
+cd cf-counterexample-arena
+xdg-open index.html
+```
+
+If `xdg-open` is missing, try `gio open index.html` or pass the file to your browser, for example `firefox index.html`.
+
+Do not use `npm install`, a bundler, or a local server. A static host such as GitHub Pages is optional and not required to play.
+
 ## Gameplay
 
 1. Open **Library** (or **Start hacking** on the home page) and pick a challenge.
